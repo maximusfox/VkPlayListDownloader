@@ -98,15 +98,19 @@ sub get_playlist {
   eval {
     $albums = decode_json($json_str_album);
     $albums = $albums->{albums};
-    $albums->{$_}->{title} = decode_entities($albums->{$_}->{title}) for (keys %{$albums});
+
+    if (!$albums or ref($albums) ne 'HASH') {
+      $albums = {};
+    } else {
+      $albums->{$_}->{title} = decode_entities($albums->{$_}->{title}) for (keys %{$albums});
+    }
   };
+
   if ($@) {
     switch ($@) {
-      case ('Ошибка доступа') { die $json_str_album }
-      else { die ( $json_str_album || '$json_str = UNDEFINED;' )."\n".$@ }
+      case ('Ошибка доступа') { die $json_str_album."\n".$@ }
+      else { die (( $json_str_album || '$json_str = UNDEFINED;' )."\n".$@) }
     }
-
-    $albums = {};
   }
 
   return 'Invalid response' unless defined $json->{all} && ref($json->{all}) eq 'ARRAY';

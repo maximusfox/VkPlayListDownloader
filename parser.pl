@@ -27,6 +27,18 @@ unless (exists $ARGV{user}) {
 	exit;
 }
 
+if (exists $ARGV{threads}) {
+	if (defined $ARGV{threads} and $ARGV{threads} !~ m#^\d+$#) {
+		$ARGV{threads} = 1;
+	}
+
+	unless (defined $ARGV{threads}) {
+		$ARGV{threads} = 1;
+	}
+} else {
+	$ARGV{threads} = 1;
+}
+
 say 'Read configuration ...';
 my $cfg = undef;
 eval {
@@ -63,10 +75,10 @@ for (@{$playlist}) {
 		#say '$ARGV{sbp} == 1';
 		if (exists $ARGV{sba}) {
 			#say '$ARGV{sba} == 1';
-			my $dirName = $_->{album}{title};
+			my $dirName = ($_->{album}{title} || 'All');
 			$dirName =~ s#[\\|/|:|'|"|\]|\[|\{|\}|\+|\)|\(|\<|\>|\|]{1}#-#g;
 
-			$playList = $_->{author};
+			$playList = ($_->{author} || 'Other');
 			$playList =~ s#[\\|/|:|'|"|\]|\[|\{|\}|\+|\)|\(|\<|\>|\|]{1}#-#g;
 
 			$fileName = $_->{name};
@@ -78,7 +90,7 @@ for (@{$playlist}) {
 			$fileLocation = $cfg->{path}{saveTo}.'/'.$userNameDirectory.'/'.$dirName.'/'.$playList.'/'.$fileName.'.mp3';
 		} else {
 			#say '$ARGV{sba} == 0';
-			my $dirName = $_->{album}{title};
+			my $dirName = ($_->{album}{title} || 'All');
 			$dirName =~ s#[\\|/|:|'|"|\]|\[|\{|\}|\+|\)|\(|\<|\>|\|]{1}#-#g;
 
 			$fileName = $_->{full_name};
@@ -91,7 +103,7 @@ for (@{$playlist}) {
 		#say '$ARGV{sbp} == 0';
 		if (exists $ARGV{sba}) {
 			#say '$ARGV{sba} == 1';
-			$playList = $_->{author};
+			$playList = ($_->{author} || 'Other');
 			$playList =~ s#[\\|/|:|'|"|\]|\[|\{|\}|\+|\)|\(|\<|\>|\|]{1}#-#g;
 
 			$fileName = $_->{name};
@@ -110,6 +122,7 @@ for (@{$playlist}) {
 	}
 
 	my $uri = $_->{link};
+	$uri =~ s!\?.+$!!;
 
 	push @threads, async {
 		my $res = $ua->get($uri, ':content_file' => $fileLocation);
@@ -118,7 +131,13 @@ for (@{$playlist}) {
 	};
 }
 
-$_->join for (@threads);
+while (@threads) {
+	for (1..$ARGV{threads}) {
+		my $thread = shift(@threads);
+		$thread->join if ($thread);
+	}
+	sleep(10);
+}
 
 
 sub Help {

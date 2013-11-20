@@ -1,3 +1,5 @@
+#!/usr/bin/env perl
+
 use strict;
 use warnings;
  
@@ -17,5 +19,7 @@ WriteMakefile(
     'Data::Dumper'      => 2.145,
     'Getopt::Mini'      => 0.02,
     'LWP::UserAgent'    => 6.05,
+    'Term::ANSIColor'   => 0,
+    'Term::ProgressBar' => 0,
   }
 );
