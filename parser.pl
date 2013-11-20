@@ -21,7 +21,7 @@ use VK::MP3;
 #Вывод справки
 Help() if $ARGV{'h'} or $ARGV{'help'};
 
-unless (defined $ARGV{user}) {
+unless (exists $ARGV{user}) {
 	say BOLD.GREEN.'Usage:'.CLEAR.' '.$0.' '.BOLD.WHITE.'--user'.CLEAR.' [ '.BOLD.WHITE.'patr14ek'.CLEAR.' | '.BOLD.WHITE.'id123'.CLEAR.' ]';
 	say BOLD.GREEN.'If you want to see the help file, use:'.CLEAR.' '.$0.' [ '.BOLD.WHITE.'-help'.CLEAR.' or '.BOLD.WHITE.'-h'.CLEAR.' ]';
 	exit;
@@ -59,8 +59,10 @@ for (@{$playlist}) {
 	my $playList;
 	my $fileName;
 
-	if ($ARGV{sbp}) {
-		if ($ARGV{sba}) {
+	if (exists $ARGV{sbp}) {
+		#say '$ARGV{sbp} == 1';
+		if (exists $ARGV{sba}) {
+			#say '$ARGV{sba} == 1';
 			my $dirName = $_->{album}{title};
 			$dirName =~ s#[\\|/|:|'|"|\]|\[|\{|\}|\+|\)|\(|\<|\>|\|]{1}#-#g;
 
@@ -75,6 +77,7 @@ for (@{$playlist}) {
 			
 			$fileLocation = $cfg->{path}{saveTo}.'/'.$userNameDirectory.'/'.$dirName.'/'.$playList.'/'.$fileName.'.mp3';
 		} else {
+			#say '$ARGV{sba} == 0';
 			my $dirName = $_->{album}{title};
 			$dirName =~ s#[\\|/|:|'|"|\]|\[|\{|\}|\+|\)|\(|\<|\>|\|]{1}#-#g;
 
@@ -85,7 +88,9 @@ for (@{$playlist}) {
 			$fileLocation = $cfg->{path}{saveTo}.'/'.$userNameDirectory.'/'.$dirName.'/'.$fileName.'.mp3';
 		}
 	} else {
-		if ($ARGV{sba}) {
+		#say '$ARGV{sbp} == 0';
+		if (exists $ARGV{sba}) {
+			#say '$ARGV{sba} == 1';
 			$playList = $_->{author};
 			$playList =~ s#[\\|/|:|'|"|\]|\[|\{|\}|\+|\)|\(|\<|\>|\|]{1}#-#g;
 
@@ -95,6 +100,7 @@ for (@{$playlist}) {
 			mkdir($cfg->{path}{saveTo}.'/'.$userNameDirectory.'/'.$playList) unless (-d $cfg->{path}{saveTo}.'/'.$userNameDirectory.'/'.$playList);
 			$fileLocation = $cfg->{path}{saveTo}.'/'.$userNameDirectory.'/'.$playList.'/'.$fileName.'.mp3';
 		} else {
+			#say '$ARGV{sba} == 0';
 			$fileName = $_->{full_name};
 			$fileName =~ s#[\\|/|:|'|"|\]|\[|\{|\}|\+|\)|\(|\<|\>|\|]{1}#-#g;
 
@@ -104,7 +110,7 @@ for (@{$playlist}) {
 	}
 
 	my $uri = $_->{link};
-	
+
 	push @threads, async {
 		my $res = $ua->get($uri, ':content_file' => $fileLocation);
 		say 'Loaded: '.$fileLocation if ($res->is_success);
@@ -116,6 +122,7 @@ $_->join for (@threads);
 
 
 sub Help {
+
 say <<EOF;
 # VK.com playlist downloader v0.1
 # Author: SHok
@@ -131,6 +138,7 @@ Sort tracks by artist:
 
 Sort by playlists:
 -sbp
-
 EOF
+
+exit;
 }
