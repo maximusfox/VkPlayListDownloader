@@ -7,20 +7,20 @@ Perl script for downloading user playlist to hard disk
 
 =head2 Install dependence
 
-	cpanm  --installdeps .
+cpanm  --installdeps .
 
 =head2 Edit config
 
-	{
-		"user": {
-			"login": "YouLogin",
-			"password": "You Password"
-		},
-		"path": {
-			"saveTo": "./saved" // save mp3 to dir
-		}
+{
+	"user": {
+		"login": "YouLogin",
+		"password": "You Password"
+	},
+	"path": {
+		"saveTo": "./saved" // save mp3 to dir
 	}
+}
 
 =head2 Download music
 
-	./parser.pl --user patr14ek
+./parser.pl --user patr14ek
