@@ -1,12 +1,14 @@
-VkPlayListDownloader
-====================
+=encoding utf8
+
+=head1 VkPlayListDownloader
 
 Perl script for downloading user playlist to hard disk
 
-Install dependence
+
+=head2 Install dependence
 	cpanm  --installdeps .
 
-Edit config
+=head2 Edit config
 	{
 		"user": {
 			"login": "YouLogin",
@@ -17,5 +19,5 @@ Edit config
 		}
 	}
 
-Download music
-	./bot --user patr14ek
+=head2 Download music
+	./parser.pl --user patr14ek
