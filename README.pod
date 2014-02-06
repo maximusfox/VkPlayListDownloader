@@ -6,9 +6,11 @@ Perl script for downloading user playlist to hard disk
 
 
 =head2 Install dependence
+
 	cpanm  --installdeps .
 
 =head2 Edit config
+
 	{
 		"user": {
 			"login": "YouLogin",
@@ -20,4 +22,5 @@ Perl script for downloading user playlist to hard disk
 	}
 
 =head2 Download music
+
 	./parser.pl --user patr14ek
