@@ -24,3 +24,20 @@ Perl script for downloading user playlist to hard disk
 =head2 Download music
 
 	./parser.pl --user patr14ek
+
+=head2 Help message
+
+\# VK.com playlist downloader v0.1
+\# Author: SHok
+
+Set user:
+--user [ patr14ek | id123 ]
+
+Output debug level:
+--debug [ <info> | detail | debug ]
+
+Sort tracks by artist:
+-sba
+
+Sort by playlists:
+-sbp
