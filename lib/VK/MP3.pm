@@ -12,7 +12,7 @@ use JSON::XS qw/decode_json/;
 use Encode;
 use Switch;
 
-our $VERSION = 0.08;
+our $VERSION = 0.10;
 
 sub new {
   my ($class, %args) = @_;
